@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}  {# On extend du template de base #}
+
+{% block title "NOS LIVRES" %}
+
+{% block body %}    {# déclaration ou ouverture du block body #}
+
+    <P>
+        Quis enim aut eum diligat quem metuat, aut eum a quo se metui putet? Coluntur tamen simulatione dumtaxat ad tempus. Quod si forte, ut fit plerumque, ceciderunt, tum intellegitur 
+        quam fuerint inopes amicorum. Quod Tarquinium dixisse ferunt, tum exsulantem se intellexisse quos fidos amicos habuisset, quos infidos, cum iam neutris gratiam referre posset.
+    </P>
+
+  
+    <ul>
+        {% for livre in livres  %}
+        {#{{dump(app.current_route)}}#}
+        <li>
+            
+            {# url à la place du path d'abord. en second parametre on n'a un tableau associatif contenant {id: 4, slug: 'pizza-fromage'} #}
+            {#  <a href="{{ url('livre.show', {id: 4, slug: pizza-fromage}) }}">Pizza aux quatres fromages</a> #}
+
+        <a href="{{ path('livre.show', {id: livre.id, slug: livre.slug|replace({'\'': '-', ' ': '-'})|lower}) }}">{{ livre.title }}</a>  {# à faire après L'ORM Doctrine #}
+            {# Dans cet exemple, j'ai utilisé le filtre replace pour remplacer les apostrophes ' et les espaces ' ' par des tirets - et |lower pour convertir en minuscules. #}
+            {# https://chatgpt.com/c/67335f15-ab9c-800a-bf7c-d4f00e1336cc #}
+            
+        </li>
+        {% endfor %} 
+        
+    </ul>
+
+{% endblock %}  {# fermeture du block body #}
