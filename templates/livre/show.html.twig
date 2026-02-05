@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title "Livre : " ~ livre.title %}    {# "Recette : " ~ slug  #}
+{% block title "Livre : " ~ livre.title %}    
 
 {% block body %}
 
-    {# Dans le cadre de twig les variables n'utilisent pas de $: {{slug}}. Les variables sont automatiquement echappées, c'est une preuve de sécurité #}
-    {# {{slug}} {{person.firstname}}  Si non on utilise la tilde ~ #}  {# {{slug}} {{person.firstname ~person.lastname}} #}
-	<h1>{{ livre.title }}</h1>  {# à faire après la partie ORM Doctrine  #}
+	<h1>{{ livre.title }}</h1>  
 
 	<p>
         {{ livre.summary | nl2br }}    
     </p>
+
+    {% if livre.coverImage %}
+        <img src="{{ livre.coverImage }}" alt="Couverture de {{ livre.title }}" style="max-width: 400px; width: 100%; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); display: block; margin-left: auto; margin-right: auto;">
+    {% else %}
+        <p>Aucune image disponible.</p>
+    {% endif %}
+
+
 
 {% endblock %}

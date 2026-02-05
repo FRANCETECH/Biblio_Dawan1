@@ -1,7 +1,7 @@
-{% for type, messages in app.flashes %} {# Grace à la variable globale app je peux recuperer tout type de message flash #}
+{% for type, messages in app.flashes %} 
 
     <div class="alert alert-{{ type }}">
-        {{ messages | join('. ') }}         {# Le séparateur entre les messages est un point suivi d'un espace grace au filtre join de twig  #}
+        {{ messages | join('. ') }}         
     </div>
 
 {% endfor %}
