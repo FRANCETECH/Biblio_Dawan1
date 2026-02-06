@@ -42,6 +42,7 @@ class LivreController extends AbstractController
         ]);
     }
 
+    #[Route('/livre/{id}/edit', name: 'livre.edit', methods: ['GET', 'POST'])]
     public function edit(Livre $livre, Request $request, EntityManagerInterface $em)
     {
         $form = $this->createForm(LivreType::class, $livre);  
@@ -87,13 +88,5 @@ class LivreController extends AbstractController
         $this->addFlash('success', 'La recette a bien été supprimée');
         return $this->redirectToRoute('livre.index');
     }
-
-
-
-
-
-
-
-
 
 }

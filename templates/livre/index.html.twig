@@ -9,16 +9,35 @@
         quam fuerint inopes amicorum. Quod Tarquinium dixisse ferunt, tum exsulantem se intellexisse quos fidos amicos habuisset, quos infidos, cum iam neutris gratiam referre posset.
     </P>
 
-    <ul>
-        {% for livre in livres  %}
-        
-        <li>
-            
-            <a href="{{ path('livre.show', {id: livre.id, slug: livre.slug|replace({'\'': '-', ' ': '-'})|lower}) }}">{{ livre.title }}</a>  
-            
-        </li>
-        {% endfor %} 
-        
-    </ul>
+    <p>
+        <a class="btn btn-primary btn-sm" href="{{ path('livre.create') }}">Créer un livre</a>
+    </p> 
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livre in livres %}
+                <tr>
+                    <td>
+                        <a href="{{ path('livre.show', {id: livre.id, slug: livre.slug|lower|replace({'\'': '-', ' ': '-'})}) }}"> {{ livre.title }} </a>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ path('livre.edit', {id: livre.id}) }}">Editer</a>
+                            <form action="{{ path('livre.delete', {id: livre.id}) }}" method="post">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}  

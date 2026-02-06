@@ -4,11 +4,15 @@ namespace App\Form;
 
 use App\Entity\Livre;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Event\PostSubmitEvent;
+use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class LivreType extends AbstractType
 {
@@ -27,14 +31,14 @@ class LivreType extends AbstractType
             ->add('publicationYear', IntegerType::class, [
                 'empty_data' => 0 
             ])
-            ->add('createdAt', null, [
-                'widget' => 'single_text', 
-                'empty_data' => (new \DateTime())->format('Y-m-d') 
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text', 
-                'empty_data' => (new \DateTime())->format('Y-m-d') 
-            ])
+                // ->add('createdAt', null, [
+                //     'widget' => 'single_text', 
+                //     'empty_data' => (new DateTime())->format('Y-m-d') 
+                // ])
+                // ->add('updatedAt', null, [
+                //     'widget' => 'single_text', 
+                //     'empty_data' => (new DateTime())->format('Y-m-d') 
+                // ])
             ->add('genre', TextType::class, [
                 'empty_data' => '' 
             ])
@@ -57,9 +61,36 @@ class LivreType extends AbstractType
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer'
             ])
+            ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'autoslug'])
+            ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'timestamps'])
+            
 
         ;
     }
+
+    public function autoslug(PreSubmitEvent $event): void 
+    {
+        $data = $event->getData();
+        if(empty($data['slug'])) {
+            $slugger = new AsciiSlugger();
+            $data['slug'] = strtolower($slugger->slug($data['title']));
+
+            $event->setData($data);
+        }
+    }
+
+    public function timestamps(PostSubmitEvent $event): void 
+    {
+        $data = $event->getData();
+
+        $data->setUpdatedAt(new \DateTimeImmutable());
+
+        if(!$data->getId()) {
+            $data->setCreatedAt(new \DateTimeImmutable());
+        }
+
+    }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

@@ -5,9 +5,12 @@ namespace App\Entity;
 use App\Repository\LivreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
-class Livre
+#[UniqueEntity(['title', 'slug'], message: 'Ce champ doit être unique')]
+class Livre // livre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,9 +18,12 @@ class Livre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min:4)]
     private ?string $title = '';
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min:4)]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*/', message: 'Invalid slug')]
     private ?string $slug = '';
 
     #[ORM\Column(length: 255)]
